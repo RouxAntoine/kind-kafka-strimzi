@@ -14,6 +14,12 @@ setup nginx ingress controller
 $ make ingress
 ```
 
+setup strimzi operator
+
+```shell
+$ make strimzi
+```
+
 delete kubernetes cluster and everything contained
 
 ```shell
