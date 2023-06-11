@@ -8,6 +8,12 @@ setup kind kubernetes cluster
 $ make cluster
 ```
 
+setup nginx ingress controller
+
+```shell
+$ make ingress
+```
+
 delete kubernetes cluster and everything contained
 
 ```shell
