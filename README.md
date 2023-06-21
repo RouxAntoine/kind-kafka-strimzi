@@ -20,6 +20,11 @@ setup strimzi operator
 $ make strimzi
 ```
 
+create kafka cluster
+
+```shell
+$ make kafka
+```
 delete kubernetes cluster and everything contained
 
 ```shell

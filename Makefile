@@ -1,4 +1,4 @@
-.PHONY: cluster delete ingress strimzi
+.PHONY: cluster delete ingress strimzi kafka
 
 INGRESS_NS=ingress-system
 CLUSTER_NAME=cluster-dev
@@ -21,6 +21,9 @@ strimzi:
 		--repo https://strimzi.io/charts \
 		--set watchAnyNamespace=true
 #		--set featureGates=+UseKRaft
+
+kafka:
+	kubectl apply -f kafka-cluster.yaml
 
 delete:
 	kind delete clusters $(CLUSTER_NAME)

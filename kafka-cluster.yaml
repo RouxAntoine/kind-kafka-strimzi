@@ -1,0 +1,97 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: streaming
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: cluster-development
+  namespace: streaming
+spec:
+  kafka:
+    version: 3.4.0
+    replicas: 1
+    # restrict resource access authorization base on AclAuthorizer
+    authorization:
+      superUsers:
+        - "admin"
+      type: "simple"
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: expose
+        port: 9094
+        type: ingress
+        tls: true
+        # listener require mtls authentication
+        authentication:
+          type: tls
+        configuration:
+          bootstrap:
+            host: kafka.127.0.0.1.nip.io
+          brokers:
+            - broker: 0
+              host: broker.0.127.0.0.1.nip.io
+    config:
+      offsets.topic.replication.factor: 1
+      transaction.state.log.replication.factor: 1
+      transaction.state.log.min.isr: 1
+      default.replication.factor: 1
+      min.insync.replicas: 1
+      inter.broker.protocol.version: "3.4"
+    storage:
+      type: "ephemeral"
+      sizeLimit: "10Gi"
+  zookeeper:
+    replicas: 1
+    storage:
+      type: "ephemeral"
+      sizeLimit: "10Gi"
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: admin
+  namespace: streaming
+  labels:
+    strimzi.io/cluster: cluster-development
+spec:
+  # create authentication means for this user : mtls, password, sasl
+  authentication:
+    type: "tls"
+  authorization:
+    type: simple
+    acls:
+      - host: "*"
+        operations:
+          - "All"
+        resource:
+          name: "*"
+          type: "topic"
+          patternType: "literal"
+      - host: "*"
+        operations:
+          - "All"
+        resource:
+          type: "cluster"
+      - host: "*"
+        operations:
+          - "All"
+        resource:
+          name: "*"
+          type: "group"
+          patternType: "literal"
+      - host: "*"
+        operations:
+          - "All"
+        resource:
+          name: "*"
+          type: "transactionalId"
+          patternType: "literal"
