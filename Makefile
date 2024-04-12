@@ -51,5 +51,8 @@ test:
 	kubectl view-secret -n streaming cluster-development-cluster-ca-cert ca.crt | kcat -b kafka.127.0.0.1.nip.io:443 -L -J -X 'security.protocol=ssl' -X "ssl.ca.location=/dev/stdin" -X "ssl.keystore.location=user.p12" -X "ssl.keystore.password=$$(kubectl view-secret -n streaming admin user.password)" |jq && \
 	rm -rf user.p12
 
+create-topic:
+	kubectl apply -f topic.yaml
+
 delete:
 	kind delete clusters $(CLUSTER_NAME)
