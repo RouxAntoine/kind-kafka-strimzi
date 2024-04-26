@@ -15,15 +15,19 @@ ingress:
 	--values nginx-ingress-values.yaml
 
 strimzi:
-	kubectl apply -f https://github.com/strimzi/strimzi-kafka-operator/releases/download/0.35.1/strimzi-crds-0.35.1.yaml
-	helm upgrade --install strimzi-operator strimzi-kafka-operator \
+	kubectl apply -f https://github.com/strimzi/strimzi-kafka-operator/releases/download/0.40.0/strimzi-crds-0.40.0.yaml
+	helm upgrade --version 0.40.0 --install strimzi-operator strimzi-kafka-operator \
 		--namespace $(STRIMZI_NS) --create-namespace \
 		--repo https://strimzi.io/charts \
 		--set watchAnyNamespace=true
 #		--set featureGates=+UseKRaft
 
 kafka:
-	kubectl apply -f kafka-cluster.yaml
+	kubectl apply -f kafka/cluster.yaml
+	kubectl apply -f kafka/user.yaml
+kafka-node-pool:
+	kubectl apply -f kafka/cluster-node-pool.yaml
+	kubectl apply -f kafka/user.yaml
 
 test-internal:
 	@kubectl view-secret -n streaming admin user.p12 > user.p12
