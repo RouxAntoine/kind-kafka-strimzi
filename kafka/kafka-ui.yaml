@@ -39,3 +39,7 @@ resources:
   limits:
     cpu: 1
     memory: 512Mi
+
+ingress:
+  enabled: true
+  host: kafka-ui.127.0.0.1.nip.io
