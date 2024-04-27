@@ -4,8 +4,8 @@ metadata:
   name: remove-node
   labels:
     strimzi.io/cluster: cluster-development
-  annotations:
-    strimzi.io/rebalance-auto-approval: "true"
+#  annotations:
+#    strimzi.io/rebalance-auto-approval: "true"
   namespace: streaming
 spec:
   mode: remove-brokers

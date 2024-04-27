@@ -1,0 +1,11 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaRebalance
+metadata:
+  name: rebalance-all-node
+  labels:
+    strimzi.io/cluster: cluster-development
+  annotations:
+    strimzi.io/rebalance-auto-approval: "true"
+  namespace: streaming
+spec:
+  mode: full

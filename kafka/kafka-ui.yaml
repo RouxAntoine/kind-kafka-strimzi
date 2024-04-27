@@ -1,0 +1,41 @@
+yamlApplicationConfig:
+  kafka:
+    clusters:
+      - name: cluster-development
+        bootstrapServers: cluster-development-kafka-expose-bootstrap.streaming.svc.cluster.local:9094
+        properties:
+          security.protocol: SSL
+          ssl.truststore.location: /config/kafka.truststore.jks
+          ssl.truststore.password: changeme
+          ssl.keystore.location: /ssl/user.p12
+          ssl.keystore.password: PASSWORD
+  auth:
+    type: LOGIN_FORM
+  spring:
+    security:
+      user:
+        name: "root"
+        password: "root"
+  management:
+    health:
+      ldap:
+        enabled: false
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /config
+  - name: secret-volume
+    mountPath: /ssl
+
+volumes:
+  - name: secret-volume
+    secret:
+      secretName: admin
+  - name: config-volume
+    configMap:
+      name: truststore
+
+resources:
+  limits:
+    cpu: 1
+    memory: 512Mi
