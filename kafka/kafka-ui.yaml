@@ -9,6 +9,9 @@ yamlApplicationConfig:
           ssl.truststore.password: changeme
           ssl.keystore.location: /ssl/user.p12
           ssl.keystore.password: PASSWORD
+        metrics:
+          type: PROMETHEUS
+          port: 9404
   auth:
     type: LOGIN_FORM
   spring:

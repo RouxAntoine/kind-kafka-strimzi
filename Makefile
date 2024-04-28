@@ -26,13 +26,11 @@ strimzi:
 kafka:
 	kubectl apply -f kafka/cluster.yaml
 	kubectl apply -f kafka/user.yaml
-kafka-node-pool:
-	kubectl apply -f kafka/cluster-node-pool.yaml
-	kubectl apply -f kafka/user.yaml
 
 ui:
 	@kubectl view-secret -n $(KAFKA_NS) admin user.p12 > user.p12
 	@kubectl view-secret -n $(KAFKA_NS) cluster-development-cluster-ca-cert ca.crt > ca.crt
+	@rm -rf kafka.truststore.jks | true
 	@keytool -import -noprompt -alias ca -file ./ca.crt -keystore kafka.truststore.jks -storepass changeme
 	@kubectl delete -n $(KAFKA_NS) configmap truststore | true
 	@kubectl create -n $(KAFKA_NS) configmap truststore --from-file kafka.truststore.jks
@@ -67,8 +65,8 @@ test-ingress:
 
 test:
 	@kubectl view-secret -n $(KAFKA_NS) admin user.p12 > user.p12 && \
-	kubectl view-secret -n $(KAFKA_NS) cluster-development-cluster-ca-cert ca.crt | kcat -b kafka.127.0.0.1.nip.io:443 -L -J -X 'security.protocol=ssl' -X "ssl.ca.location=/dev/stdin" -X "ssl.keystore.location=user.p12" -X "ssl.keystore.password=$$(kubectl view-secret -n $(KAFKA_NS) admin user.password)" |jq && \
-	rm -rf user.p12
+	kubectl view-secret -n $(KAFKA_NS) cluster-development-cluster-ca-cert ca.crt | kcat -b kafka.127.0.0.1.nip.io:443 -L -J -X 'security.protocol=ssl' -X "ssl.ca.location=/dev/stdin" -X "ssl.keystore.location=user.p12" -X "ssl.keystore.password=$$(kubectl view-secret -n $(KAFKA_NS) admin user.password)" |jq
+	@rm -rf user.p12
 
 create-topic:
 	kubectl apply -f kafka/topic.yaml
