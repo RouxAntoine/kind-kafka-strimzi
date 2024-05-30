@@ -1,6 +1,6 @@
-# kind x strimzi
+# kind related stuff
 
-Sample project of kafka cluster deployed with strimzi on kind kubernetes cluster
+Sample project to setup some stuff on kind kubernetes cluster
 
 setup kind kubernetes cluster
 
@@ -13,6 +13,16 @@ setup nginx ingress controller
 ```shell
 $ make ingress
 ```
+
+delete kubernetes cluster and everything contained
+
+```shell
+$ make delete
+```
+
+## kind x strimzi
+
+Sample project of kafka cluster deployed with strimzi on kind kubernetes cluster
 
 setup strimzi operator
 
@@ -33,12 +43,6 @@ $ make test-internal # port-forward internal broker listener
 $ make test-services # port-forward exposed broker listener through service
 $ make test-ingress # port-forward ingress controller service
 $ make test # direct access with kind port-mapping
-```
-
-delete kubernetes cluster and everything contained
-
-```shell
-$ make delete
 ```
 
 ---
